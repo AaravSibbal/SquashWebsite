@@ -8,7 +8,7 @@ import (
 )
 
 type Player struct {
-	Player_ID 	*uuid.UUID
+	Player_ID    *uuid.UUID
 	Name         string
 	EloRating    int
 	Wins         int
@@ -22,8 +22,8 @@ func (player *Player) Equals(p *Player) bool {
 	return result == 0
 }
 
-func (player *Player) UpdatePlayer(match *Match){
-	result:= player.DidPlayerWin(match)
+func (player *Player) UpdatePlayer(match *Match) {
+	result := player.DidPlayerWin(match)
 
 	if result {
 		player.Wins++
@@ -38,8 +38,8 @@ func (player *Player) DidPlayerWin(match *Match) bool {
 }
 
 func (player *Player) String() string {
-	return fmt.Sprintf("Name: %s\nElo Rating: %d\nWins: %d\nLosses: %d\nTotal Matches: %d\n", 
-	player.Name, player.EloRating, player.Wins, player.Losses, player.TotalMatches)
+	return fmt.Sprintf("Name: %s\nElo Rating: %d\nWins: %d\nLosses: %d\nTotal Matches: %d\n",
+		player.Name, player.EloRating, player.Wins, player.Losses, player.TotalMatches)
 }
 
 type Players struct {
@@ -55,6 +55,21 @@ func (pls Players) New(name string) *Player {
 		Draws:        0,
 		TotalMatches: 0,
 	}
+	return p
+}
+
+func (pls *Players) CreatePlayer(playerID *uuid.UUID, name string, eloRating int, 
+	wins int, losses int, draws int, totalMatches int) *Player {
+	p := &Player{
+		Player_ID: playerID,
+		Name: name,
+		EloRating: eloRating,
+		Wins: wins,
+		Losses: losses,
+		Draws: draws,
+		TotalMatches: totalMatches,
+	}
+	
 	return p
 }
 

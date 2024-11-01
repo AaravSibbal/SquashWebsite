@@ -16,7 +16,7 @@ func (app *application) Routes() http.Handler {
 	mux.Get("/ping", standardMiddleware.ThenFunc(app.pong))
 	mux.Get("/", standardMiddleware.ThenFunc(app.home))
 
-	fileServer := http.FileServer(http.Dir("/ui/static/"))
+	fileServer := http.FileServer(http.Dir("ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))
 
 	// http.Handle("/", fileServer)

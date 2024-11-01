@@ -55,7 +55,7 @@ func (app *application) secureHeaders(next http.Handler) http.Handler {
 }
 
 func (app *application) readHTMLFile(name string) ([]byte, error) {
-	file, err := os.OpenFile(fmt.Sprintf("ui/static/html/%s", name), os.O_RDONLY, 0644)
+	file, err := os.OpenFile(fmt.Sprintf("ui/html/%s", name), os.O_RDONLY, 0644)
 	if err != nil {
 		app.errorLog.Printf("couldn't open file: %s\n%v",name, err )
 		return nil, err

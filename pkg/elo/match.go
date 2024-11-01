@@ -21,20 +21,19 @@ type Matches struct {
 	matches []*Match
 }
 
-func (ms Matches) New(playerA, playerB, playerWon *Player) *Match {
-	time := time.Now()
-	id := uuid.New()
+func (ms Matches) New(playerA *Player, playerB *Player, playerWon *Player, 
+	id *uuid.UUID, when *time.Time) *Match {
 	
 	m := &Match{
-		Id: &id,
+		Id: id,
 		PlayerA: playerA,
 		PlayerB: playerB,
 		PlayerWon: playerWon,
 		PlayerARating: playerA.EloRating,
 		PlayerBRating: playerB.EloRating,
-		When: &time,
+		When: when,
 	}
-	
+
 	return m
 }
 
