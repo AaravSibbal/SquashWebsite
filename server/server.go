@@ -3,19 +3,19 @@ package server
 import (
 	"context"
 	"fmt"
-	// "database/sql"
+	"database/sql"
 	// "fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
+	_ "github.com/lib/pq"
 	"github.com/joho/godotenv"
 )
 
 type application struct {
 	ctx            *context.Context
-	// db             *sql.DB
+	db             *sql.DB
 	infoLog        *log.Logger
 	errorLog       *log.Logger
 }
@@ -26,10 +26,10 @@ func Run() {
 		log.Fatalf("Couldn't read the .env file %v", err)
 	}
 
-	// db, err := getDBConnection(envFile)
-	// if err != nil {
-	// 	log.Fatalf("could not connect to the DB: %v", err)
-	// }
+	db, err := getDBConnection(envFile)
+	if err != nil {
+		log.Fatalf("could not connect to the DB: %v", err)
+	}
 
 	infoLog := log.New(os.Stdout, "INFO:\t", log.Ldate|log.Ltime)
 	errLogger := log.New(os.Stdout, "ERROR:\t", log.Ltime|log.Ldate|log.Lshortfile)
@@ -38,7 +38,7 @@ func Run() {
 
 	app := &application{
 		ctx: &ctx,
-		// db: db,
+		db: db,
 		infoLog: infoLog,
 		errorLog: errLogger,
 
@@ -60,31 +60,31 @@ func Run() {
 	log.Fatal(err)
 }
 
-// func getDBConnection(envFile map[string]string) (*sql.DB, error){
-// 	host := envFile["POSTGRES_HOST"]
-// 	postPort := envFile["POSTGRES_PORT"]
-// 	user := envFile["POSTGRES_USER"]
-// 	password := envFile["POSTGRES_PASSWORD"]
-// 	dbName := envFile["POSTGRES_NAME"]
+func getDBConnection(envFile map[string]string) (*sql.DB, error){
+	host := envFile["POSTGRES_HOST"]
+	postPort := envFile["POSTGRES_PORT"]
+	user := envFile["POSTGRES_USER"]
+	password := envFile["POSTGRES_PASSWORD"]
+	dbName := envFile["POSTGRES_NAME"]
 
-// 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-// 		host, postPort, user, password, dbName)
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		host, postPort, user, password, dbName)
 
-// 	fmt.Println(psqlInfo)
+	fmt.Println(psqlInfo)
 
-// 	db, err := sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo)
 
-// 	if err != nil {
-// 		log.Fatalln("there was an error getting the db connection", err)
-// 		return nil, err
-// 	}
+	if err != nil {
+		log.Fatalln("there was an error getting the db connection", err)
+		return nil, err
+	}
 
 
-// 	if err = db.Ping(); err != nil {
-// 		log.Fatalln("we couldn't ping the db for some reason", err)
-// 	}
+	if err = db.Ping(); err != nil {
+		log.Fatalln("we couldn't ping the db for some reason", err)
+	}
 
-// 	fmt.Println("db was connected successfuly")
+	fmt.Println("db was connected successfuly")
 
-// 	return db, nil
-// }
+	return db, nil
+}

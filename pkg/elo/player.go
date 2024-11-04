@@ -43,7 +43,7 @@ func (player *Player) String() string {
 }
 
 type Players struct {
-	players map[string]*Player
+	players []*Player
 }
 
 func (pls Players) New(name string) *Player {
@@ -69,34 +69,67 @@ func (pls *Players) CreatePlayer(playerID *uuid.UUID, name string, eloRating int
 		Draws: draws,
 		TotalMatches: totalMatches,
 	}
-	
+
 	return p
 }
 
 func (pls *Players) AddPlayer(p *Player) bool {
-	_, exists := pls.players[p.Name]
-	if exists {
+	if p == nil {
 		return false
 	}
-
-	pls.players[p.Name] = p
+	
+	pls.players = append(pls.players, p)
 	return true
 }
 
+/*
+	removes player given the name 
+	returns true if name was for a valid Player
+	otherwise returns false
+*/
 func (pls *Players) RemovePlayer(name string) bool {
-	_, exists := pls.players[name]
-	if !exists {
+	idx := pls.GetPlayerIdx(name)
+	if idx == -1 {
 		return false
 	}
-
-	delete(pls.players, name)
+	player := pls.GetPlayerByIdx(idx)
+	if player == nil {
+		return false
+	}
+	pls.players = append(pls.players[idx:], pls.players[:idx+1]...)
 	return true
 }
 
-func (pls *Players) GetPlayer(name string) (*Player, bool) {
-	player, exists := pls.players[name]
-	if !exists {
-		return nil, false
+func (pls *Players) GetPlayer(name string) (*Player) {
+	for _, player := range pls.players {
+		if player.Name == name {
+			return player
+		}
 	}
-	return player, true
+
+	return nil
+}
+
+/*
+	return player Object if index is valid return nil otherwise
+*/
+func (pls *Players) GetPlayerByIdx(idx int) (*Player) {
+	if idx < 0 || idx >= len(pls.players) {
+		return nil
+	}
+
+	return pls.players[idx]
+}
+
+/*
+	returns index of a player if found returns -1 otherwise
+*/
+func (pls *Players) GetPlayerIdx(name string) (idx int) {
+	for i, player := range pls.players {
+		if player.Name == name {
+			return i
+		}
+	}
+
+	return -1
 }
