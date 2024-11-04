@@ -1,15 +1,21 @@
-async function getRanking(){
-    try {
-        const response = await fetch("/players/ranking", {
-            method: "GET",
-        })
+const rankingTableBody = document.getElementById("ranking-table-body")
 
-        response.json().then((data)=>{
-            console.log(data)
-        }).catch((error)=>{
-            console.log("there was an error reading the data\n\n", error)
-        })
-    } catch (error) {
-        console.log("there was an error getting the data")
-    }
+async function getRanking(){
+    fetch("/players/ranking", {
+        method: "GET",
+    }).then((response)=>{
+        if (!response.ok) {
+            throw new Error("response was not okay")
+        }
+
+        return response.text()
+    }).then(htmlContent=>{
+        rankingTableBody.innerHTML = htmlContent 
+    }).catch(error => {
+        console.error("there was a problem with the fetch operating\n\n"+error)
+    })
 }
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    getRanking()
+})

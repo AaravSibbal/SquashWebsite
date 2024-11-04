@@ -15,6 +15,7 @@ type Player struct {
 	Losses       int
 	Draws        int
 	TotalMatches int
+	Ranking      int
 }
 
 func (player *Player) Equals(p *Player) bool {
@@ -58,15 +59,15 @@ func (pls Players) New(name string) *Player {
 	return p
 }
 
-func (pls *Players) CreatePlayer(playerID *uuid.UUID, name string, eloRating int, 
+func (pls *Players) CreatePlayer(playerID *uuid.UUID, name string, eloRating int,
 	wins int, losses int, draws int, totalMatches int) *Player {
 	p := &Player{
-		Player_ID: playerID,
-		Name: name,
-		EloRating: eloRating,
-		Wins: wins,
-		Losses: losses,
-		Draws: draws,
+		Player_ID:    playerID,
+		Name:         name,
+		EloRating:    eloRating,
+		Wins:         wins,
+		Losses:       losses,
+		Draws:        draws,
 		TotalMatches: totalMatches,
 	}
 
@@ -77,15 +78,15 @@ func (pls *Players) AddPlayer(p *Player) bool {
 	if p == nil {
 		return false
 	}
-	
+
 	pls.players = append(pls.players, p)
 	return true
 }
 
 /*
-	removes player given the name 
-	returns true if name was for a valid Player
-	otherwise returns false
+removes player given the name
+returns true if name was for a valid Player
+otherwise returns false
 */
 func (pls *Players) RemovePlayer(name string) bool {
 	idx := pls.GetPlayerIdx(name)
@@ -100,7 +101,7 @@ func (pls *Players) RemovePlayer(name string) bool {
 	return true
 }
 
-func (pls *Players) GetPlayer(name string) (*Player) {
+func (pls *Players) GetPlayer(name string) *Player {
 	for _, player := range pls.players {
 		if player.Name == name {
 			return player
@@ -111,9 +112,9 @@ func (pls *Players) GetPlayer(name string) (*Player) {
 }
 
 /*
-	return player Object if index is valid return nil otherwise
+return player Object if index is valid return nil otherwise
 */
-func (pls *Players) GetPlayerByIdx(idx int) (*Player) {
+func (pls *Players) GetPlayerByIdx(idx int) *Player {
 	if idx < 0 || idx >= len(pls.players) {
 		return nil
 	}
@@ -122,7 +123,7 @@ func (pls *Players) GetPlayerByIdx(idx int) (*Player) {
 }
 
 /*
-	returns index of a player if found returns -1 otherwise
+returns index of a player if found returns -1 otherwise
 */
 func (pls *Players) GetPlayerIdx(name string) (idx int) {
 	for i, player := range pls.players {

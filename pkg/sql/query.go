@@ -22,6 +22,7 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 	}
 
 	var totalCount int
+	count := 1
 	firstRow := true
 	var players []*elo.Player
 
@@ -29,6 +30,7 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 		player := &elo.Player{}
 		
 		err := rows.Scan(player.Player_ID, player.Name, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, &totalCount)
+		player.Ranking = count
 		if err != nil {
 			return nil, err	
 		}
@@ -38,6 +40,7 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 			players = make([]*elo.Player, 0, totalCount)
 		}
 
+		count++
 		players = append(players, player)
 	}
 

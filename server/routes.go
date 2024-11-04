@@ -15,6 +15,8 @@ func (app *application) Routes() http.Handler {
 
 	mux.Get("/ping", standardMiddleware.ThenFunc(app.pong))
 	mux.Get("/", standardMiddleware.ThenFunc(app.home))
+	mux.Get("/player/ranking", standardMiddleware.ThenFunc(app.playerRankings))
+	mux.Get("/player/:name", standardMiddleware.ThenFunc(app.playerHistory))
 
 	fileServer := http.FileServer(http.Dir("ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))
