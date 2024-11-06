@@ -1,7 +1,16 @@
 class Match {
-    constructor(id, playerA, playerB, playerARating, playerBRating, playerWon, when){
+    
+    /**
+     * 
+     * @param {string} playerA 
+     * @param {string} playerB 
+     * @param {string} playerARating 
+     * @param {string} playerBRating 
+     * @param {string} playerWon 
+     * @param {string} when 
+     */
+    constructor(playerA, playerB, playerARating, playerBRating, playerWon, when){
         // all these are strings exccept when will figure that out later
-        this.id = id
         this.playerA = playerA
         this.playerB = playerB
         this.playerARating = playerARating
@@ -11,20 +20,50 @@ class Match {
     }
 
     // getters
-    getID() { return this.id }
+
+    /**
+     * 
+     * @returns {string}
+     */
     getPlayerA() { return this.playerA }
+    /**
+     * 
+     * @returns {string}
+     */
     getPlayerB() { return this.playerB }
+    /**
+     * 
+     * @returns {string} 
+     */
     getPlayerARating() { return this.playerARating }
+    /**
+     * 
+     * @returns {string}
+     */
     getPlayerBRating() { return this.playerBRating }
+    /**
+     * 
+     * @returns {string}
+     */
     getPlayerWon() { return this.playerWon }
+    /**
+     * @returns {string}
+     */
     getWhen() { return this.when }
 
     // html
+    /**
+     * returns HTMLTableRowElement which can be added to the table
+     * @returns {HTMLTableRowElement}
+     */
     toHTMLRow(){
         let row = document.createElement("tr")
         
         let playerA = document.createElement("td")
-        playerA.textContent = this.getPlayerA()
+        let playerALink = document.createElement('a')
+        playerALink.href = `/player/${playerA}`
+        playerALink.innerText = this.getPlayerA()
+        playerA.appendChild(playerALink)
         
         let playerB = document.createElement("td")
         playerB.textContent = this.getPlayerB()

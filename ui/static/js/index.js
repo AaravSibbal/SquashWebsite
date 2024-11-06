@@ -2,6 +2,9 @@
  * @type {Player[]}
  */
 let players = []
+/**
+ * @type {HTMLTableSectionElement}
+ */
 const rankingTableBody = document.getElementById("ranking-table-body")
 
 class Player {
@@ -15,11 +18,35 @@ class Player {
     }
 
     // getters
+    /**
+     * 
+     * @returns {string}
+     */
     getRanking(){ return this.ranking }
+    /**
+     * 
+     * @returns {string}
+     */
     getName(){ return this.name }
+    /**
+     * 
+     * @returns {string}
+     */
     getEloRating(){ return this.eloRating }
+    /**
+     * 
+     * @returns {string}
+     */
     getWins(){ return this.wins }
+    /**
+     * 
+     * @returns {string}
+     */
     getLosses(){ return this.losses }
+    /**
+     * 
+     * @returns {string}
+     */
     getTotalMatches(){ return this.totalMatches }
     
     /**
@@ -55,7 +82,6 @@ class Player {
 
 }
 
-
 async function getRanking(){
     fetch("/players/ranking", {
         method: "GET",
@@ -72,6 +98,11 @@ async function getRanking(){
     })
 }
 
+/**
+ * takes in the json object and fills html table with the data recieved
+ * also adds the players to an array for searching purposes
+ * @param {*} obj 
+ */
 function createPlayerArrFromJson(obj){
     let len = obj.length
 

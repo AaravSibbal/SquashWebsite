@@ -1,5 +1,8 @@
 
-
+/**
+ * @type {Match[]}
+ */
+let macthes = []
 const playerDiv = document.getElementById('player-stat')
 const playerGraph = document.getElementById("player-graph")
 const playerMatchesBody = document.getElementById('player-matches-body')
@@ -56,10 +59,10 @@ async function getMatches(){
             throw new Error("response was not okay")
         }
 
-        return response.text()
-    }).then((htmlContent)=>{
-        playerMatchesBody.innerHTML += htmlContent
+        return response.json()
+    }).then((jsonObj)=>{
         record++
+        console.log(jsonObj)
     }).catch(error=>{
         console.error("there was a problem with the request")
     })
@@ -84,4 +87,18 @@ function getPlayerNameFromUrl(){
     console.log(pathArr)
 
     return pathArr[2]
+}
+
+function jsonToHTMLMatches(jsonObj){
+    let len = jsonObj.length
+
+    for(let i=0; i<len; i++){
+        let matchObj = jsonObj[i]
+        let match = new Match(matchObj.playerA, matchObj.playerB, 
+            matchObj.playerARating, matchObj.playerBRating, 
+            matchObj.playerWon, matchObj.when)
+        macthes.push(match)
+        let matchHTMLRow = match.toHTMLRow()
+        playerMatchesBody.appendChild(matchHTMLRow)
+    }
 }
