@@ -38,6 +38,14 @@ func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 	w.Write([]byte(playerHTML))
 }
 
-func (app *application) playerHistory(w http.ResponseWriter, r *http.Request){
-	
+func (app *application) playerStat(w http.ResponseWriter, r *http.Request){
+
+}
+
+func (app *application) playerGraph(w http.ResponseWriter, r *http.Request){
+
+}
+
+func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
+
 }

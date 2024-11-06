@@ -1,3 +1,5 @@
+
+
 const playerDiv = document.getElementById('player-stat')
 const playerGraph = document.getElementById("player-graph")
 const playerMatchesBody = document.getElementById('player-matches-body')
@@ -11,7 +13,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })
 
 async function getPlayer(){
-    fetch(`${playerName}/stat`, {
+    fetch(`/player/${playerName}/stat`, {
         method: "GET"
     }).then((response)=>{
         if(!response.ok){
@@ -27,7 +29,7 @@ async function getPlayer(){
 }
 
 async function getGraph(){
-    fetch(`/${playerName}/graph`, {
+    fetch(`/player/${playerName}/graph`, {
         method: "GET"
     }).then((response)=>{
         if(!response.ok){
@@ -47,7 +49,7 @@ async function getGraph(){
  */
 async function getMatches(){
 
-    fetch(`/${playerName}/matches?record=${record}`, {
+    fetch(`/player/${playerName}/matches?record=${record}`, {
         method: "GET"
     }).then((response)=>{
         if(!response.ok){
