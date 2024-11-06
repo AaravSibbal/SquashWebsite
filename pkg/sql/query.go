@@ -50,3 +50,7 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 
 	return players, nil
 }
+
+func GetPlayerData(db *sql.DB, ctx *context.Context, name string){
+
+}
