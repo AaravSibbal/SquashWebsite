@@ -32,7 +32,6 @@ func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 		errHTML := app.errorHTML("There are no players in the system yet")
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(errHTML))
-		return
 	}
 
 	playerHTML := app.createPlayerRankingHTML(players)
