@@ -24,7 +24,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	w.Write(htmlFile)
 }
 
-// TODO: change this function so it gives out json rather than html
 func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 	players, err := psql.GetRanking(app.db, app.ctx)
 	if err != nil {
@@ -32,16 +31,14 @@ func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 		return 
 	}
 
-	if len(players) == 0 {
-		errHTML := app.errorHTML("There are no players in the system yet")
-		w.Header().Set("Content-Type", "text/html")
-		w.Write([]byte(errHTML))
+	playersJson, err := json.Marshal(players)
+	if err != nil {
+		app.serverError(w, err)
 		return
 	}
 
-	playerHTML := app.createPlayerRankingHTML(players)
-	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(playerHTML))
+	w.Header().Set("Content-Type", "application/json")	
+	w.Write(playersJson)
 }
 
 func (app *application) playerStat(w http.ResponseWriter, r *http.Request){

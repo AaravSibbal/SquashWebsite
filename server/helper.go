@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
-
-	"github.com/AaravSibbal/SquashWebsite/pkg/elo"
 )
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
@@ -72,33 +70,4 @@ func (app *application) readHTMLFile(name string) ([]byte, error) {
 	}
 
 	return content, nil
-}
-
-func (app *application) createPlayerRankingHTML(players []*elo.Player) string { 
-	html := "<tr>"
-
-	for _, player := range players {
-		html += fmt.Sprintf(`<td>%d</td>
-		<td>
-			<a href="/player/%s" target="_blank" rel="noopener noreferrer">
-				%s
-			</a>
-		</td>
-		
-		<td>%d</td>
-		<td>%d</td><td>%d</td><td>%d</td>`, player.Ranking, player.Name,
-		player.Name, player.EloRating, player.Wins, player.Losses, 
-		player.TotalMatches)
-	}
-
-	html += "</tr>"
-	return html
-}
-
-func (app *application) errorHTML(errorString string) string {
-	html := fmt.Sprintf(`<tr>
-		<td>Error:%s</td>
-	</tr>`, errorString)
-
-	return html
 }
