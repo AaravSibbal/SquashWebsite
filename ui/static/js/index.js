@@ -76,14 +76,14 @@ class Player {
         ranking.innerText = this.getRanking()
 
         let link = document.createElement('a')
-        link.href = `/player/${this.getName}`
+        link.href = `/player/${this.getName()}`
         link.innerText = this.getName()
         name.appendChild(link)
 
         eloRanking.innerText = this.getEloRating()
         wins.innerText = this.getWins()
         losses.innerText = this.getLosses()
-        totalMatches.innerText = this.totalMatches()
+        totalMatches.innerText = this.getTotalMatches()
 
         row.append(ranking, name, eloRanking, wins, losses, totalMatches)
 
@@ -93,7 +93,7 @@ class Player {
 }
 
 async function getRanking(){
-    fetch("/players/ranking", {
+    fetch("/player/ranking", {
         method: "GET",
     }).then((response)=>{
         if (!response.ok) {
@@ -103,6 +103,7 @@ async function getRanking(){
         return response.json()
     }).then(jsonObj=>{
         console.log(jsonObj)
+        createPlayerArrFromJson(jsonObj)
     }).catch(error => {
         console.error("there was a problem with the fetch operating\n\n"+error)
     })
@@ -116,7 +117,7 @@ async function getRanking(){
 function createPlayerArrFromJson(obj){
     let len = obj.length
 
-    for(i=0; i<len; i++){
+    for(let i=0; i<len; i++){
         let playerObj = obj[i]
         let player = new Player(playerObj.ranking, playerObj.name, 
             playerObj.eloRating, playerObj.wins, playerObj.losses, 

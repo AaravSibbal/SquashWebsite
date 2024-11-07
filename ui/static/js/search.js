@@ -1,7 +1,7 @@
 const searchInput = document.getElementById('player-search')
 
 // Event listener for the search input
-document.getElementById("searchInput").addEventListener("input", function (e) {
+searchInput.addEventListener("input", function (e) {
   const searchTerm = e.target.value.toLowerCase();
   const filteredPlayers = players.filter(player =>
     player.name.toLowerCase().includes(searchTerm)

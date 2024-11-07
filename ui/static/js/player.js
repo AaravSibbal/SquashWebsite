@@ -23,9 +23,9 @@ async function getPlayer(){
             throw new Error("response was not okay")
         }
 
-        return response.text()
-    }).then(htmlContent=>{
-        playerDiv.innerHTML = htmlContent
+        return response.json()
+    }).then(jsonObj=>{
+        console.log(jsonObj)
     }).catch(error=>{
         console.error(error)
     })

@@ -33,8 +33,9 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 
 	for rows.Next() {
 		player := &elo.Player{}
+
+		err := rows.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &totalCount)
 		
-		err := rows.Scan(player.Player_ID, player.Name, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, &totalCount)
 		player.Ranking = count
 		if err != nil {
 			return nil, err	
@@ -71,8 +72,8 @@ func GetPlayerData(db *sql.DB, ctx *context.Context, name string) (*elo.Player, 
 	
 	player := &elo.Player{}
 
-	err = row.Scan(player.Player_ID, player.Name, player.EloRating,
-		player.Wins, player.Losses, player.Draws, player.TotalMatches)
+	err = row.Scan(&player.Player_ID, &player.Name, &player.EloRating,
+		&player.Wins, &player.Losses, &player.Draws, &player.TotalMatches)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +88,7 @@ func GetPlayerMatches(db *sql.DB, ctx *context.Context, name string, offset int)
 
 	stmt, err := db.PrepareContext(newCtx, `SELECT * from match WHERE 
 	player_a_name=$1 OR player_b_name=$1 
-	ORDER BY when DESC LIMIT 20 OFFSET $2;`)
+	ORDER BY match_time DESC LIMIT 20 OFFSET $2;`)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +105,7 @@ func GetPlayerMatches(db *sql.DB, ctx *context.Context, name string, offset int)
 
 		var id, playerAID, playerBID, playerWonID, playerAName, playerBName string
 		var playerARating, playerBRating int
-		var when time.Time
+		when := time.Time{}
 	
 		err := rows.Scan(&id, &playerAID, &playerBID, &playerWonID, &when,
 				&playerARating, &playerBRating, &playerAName, &playerBName)

@@ -125,3 +125,14 @@ func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(matchesJson)
 }
+
+func (app *application) playerHtml(w http.ResponseWriter, r *http.Request){
+	html, err := app.readHTMLFile("player.html")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Write(html)
+}
