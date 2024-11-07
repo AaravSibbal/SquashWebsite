@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"net/http"
 
 	psql "github.com/AaravSibbal/SquashWebsite/pkg/sql"
@@ -39,13 +40,26 @@ func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 }
 
 func (app *application) playerStat(w http.ResponseWriter, r *http.Request){
+	name := r.URL.Query().Get(":name")
+	
+	player, err := psql.GetPlayerData(app.db, app.ctx, name)
+	if err != nil {
+		app.serverError(w, err)
+	}
 
+	playerJson, err := json.Marshal(player)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(playerJson)
 }
 
 func (app *application) playerGraph(w http.ResponseWriter, r *http.Request){
-
+		
 }
 
 func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
-
+	
 }

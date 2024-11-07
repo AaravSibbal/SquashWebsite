@@ -7,7 +7,7 @@ const playerDiv = document.getElementById('player-stat')
 const playerGraph = document.getElementById("player-graph")
 const playerMatchesBody = document.getElementById('player-matches-body')
 const playerName = getPlayerNameFromUrl()
-let record = 1
+let record = 0
 
 document.addEventListener('DOMContentLoaded', ()=>{
     getPlayer()
@@ -65,6 +65,7 @@ async function getMatches(){
         console.log(jsonObj)
     }).catch(error=>{
         console.error("there was a problem with the request")
+        record--
     })
 
 

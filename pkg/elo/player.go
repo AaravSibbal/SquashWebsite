@@ -3,19 +3,17 @@ package elo
 import (
 	"fmt"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
 type Player struct {
-	Player_ID    *uuid.UUID
-	Name         string
-	EloRating    int
-	Wins         int
-	Losses       int
-	Draws        int
-	TotalMatches int
-	Ranking      int
+	Player_ID    string `json:"playerID"`
+	Name         string	`json:"name"`
+	EloRating    int	`json:"eloRating"`
+	Wins         int	`json:"wins"`
+	Losses       int	`json:"losses"`
+	Draws        int	`json:"draws"`
+	TotalMatches int	`json:"totalMatches"`
+	Ranking      int	`json:"ranking"`
 }
 
 func (player *Player) Equals(p *Player) bool {
@@ -59,7 +57,7 @@ func (pls Players) New(name string) *Player {
 	return p
 }
 
-func (pls *Players) CreatePlayer(playerID *uuid.UUID, name string, eloRating int,
+func (pls *Players) CreatePlayer(playerID string, name string, eloRating int,
 	wins int, losses int, draws int, totalMatches int) *Player {
 	p := &Player{
 		Player_ID:    playerID,

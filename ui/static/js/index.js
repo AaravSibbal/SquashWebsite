@@ -8,6 +8,16 @@ let players = []
 const rankingTableBody = document.getElementById("ranking-table-body")
 
 class Player {
+
+    /**
+     * 
+     * @param {number} ranking 
+     * @param {string} name 
+     * @param {number} eloRating 
+     * @param {number} wins 
+     * @param {number} losses 
+     * @param {number} totalMatches 
+     */
     constructor(ranking, name, eloRating, wins, losses, totalMatches){
         this.ranking = ranking
         this.name = name
