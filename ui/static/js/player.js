@@ -95,11 +95,27 @@ function jsonToHTMLMatches(jsonObj){
 
     for(let i=0; i<len; i++){
         let matchObj = jsonObj[i]
-        let match = new Match(matchObj.playerA, matchObj.playerB, 
+        let match = new Match (matchObj.playerA, matchObj.playerB, 
             matchObj.playerARating, matchObj.playerBRating, 
             matchObj.playerWon, matchObj.when)
         macthes.push(match)
         let matchHTMLRow = match.toHTMLRow()
         playerMatchesBody.appendChild(matchHTMLRow)
     }
+}
+
+function playerJsonToHTML(jsonObj){
+    const nameElem = document.createElement('p')
+    const breakElem = document.createElement('br')
+    const statLineElem = document.createElement('p')
+
+    const name = jsonObj.name
+    const wins = jsonObj.wins
+    const losses = jsonObj.losses
+    const totalMatches = jsonObj.totalMatches
+    const eloRating = jsonObj.eloRating
+
+    const stat = `Elo Rating:${eloRating}\tWins: ${wins}\tLosses:${losses}\t
+        Total Matches: ${totalMatches}`
+
 }

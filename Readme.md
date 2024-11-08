@@ -27,4 +27,5 @@ This is a website that is made along side SquashEloRatingSystem which is a disco
 
 ## TODO
 
+- Create the initiating event for lazy loading i.e. have the fetch call when scrolled to the end of the table
 - Create tests
