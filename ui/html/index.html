@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Squash Club-Home</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Kode+Mono:wght@400..700&family=VT323&family=Varela+Round&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="header">
-        <h1>Carleton Squash Clud Rankings</h1>
+        <h1>Carleton Squash Club Rankings</h1>
     </div>
 
-    <div>
-        <input type="text" name="player-search" id="player-search">
-        <label for="player-search">Player Search</label>
-    </div>
 
     <div class="content">
-       <table id="ranking-table">
-            <thead>
+        <div class="search">
+            <label for="player-search">Search</label>
+            <input type="text" name="player-search" id="player-search" placeholder="Enter Player Name">
+        </div>
+        <table id="ranking-table" class="ranking">
+            <thead class="ranking-head">
                 <tr>
-                    <th>Raking</th>
+                    <th>Ranking</th>
                     <th>Player</th>
                     <th>Elo</th>
                     <th>Wins</th>
@@ -27,9 +33,10 @@
                     <th>Total Matches</th>
                 </tr>
             </thead>
-            <tbody id="ranking-table-body">
+            <tbody id="ranking-table-body" class="ranking-body">
+                
             </tbody>
-       </table> 
+        </table>
     </div>
 
     <div class="footer">
