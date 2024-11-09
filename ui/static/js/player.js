@@ -1,4 +1,3 @@
-
 /**
  * @type {Match[]}
  */
@@ -26,6 +25,7 @@ async function getPlayer(){
         return response.json()
     }).then(jsonObj=>{
         console.log(jsonObj)
+        playerJsonToHTML(jsonObj)
     }).catch(error=>{
         console.error(error)
     })
@@ -106,8 +106,9 @@ function jsonToHTMLMatches(jsonObj){
 
 function playerJsonToHTML(jsonObj){
     const nameElem = document.createElement('p')
-    const breakElem = document.createElement('br')
     const statLineElem = document.createElement('p')
+    nameElem.className = "player-name"
+    statLineElem.className = "player-statline"
 
     const name = jsonObj.name
     const wins = jsonObj.wins
@@ -115,7 +116,10 @@ function playerJsonToHTML(jsonObj){
     const totalMatches = jsonObj.totalMatches
     const eloRating = jsonObj.eloRating
 
-    const stat = `Elo Rating:${eloRating}\tWins: ${wins}\tLosses:${losses}\t
-        Total Matches: ${totalMatches}`
+    const stat = `Elo Rating: ${eloRating}\tWins: ${wins}\tLosses: ${losses}\tTotal Matches: ${totalMatches}`
+    nameElem.innerText = name
+    statLineElem.innerText = stat
+
+    playerDiv.append(nameElem, statLineElem)
 
 }

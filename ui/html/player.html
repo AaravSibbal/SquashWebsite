@@ -1,56 +1,64 @@
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Aarav Sibbal">
     <meta name="robots" content="index, follow">
     <meta name="geo.region" content="CA-ON">
     <meta name="geo.placename" content="Ottawa">
     <meta name="keywords" content="Carleton, University, Squash, Club, Ranking, Rankings, Player, Graph, Ottawa, Ontario, Canada">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player-Squash Ranking</title>
+    <link rel="stylesheet" href="../static/css/player.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Kode+Mono:wght@400..700&family=VT323&family=Varela+Round&display=swap"
+        rel="stylesheet">
 </head>
-<body>
-    <header id="header">
-        <h1>Carleton Squash Club Rankings</h1>
-    </header>
-    
-    <section id="content">
-        <h2>
-            <div id="player-stat">
-            </div>
-        </h2>
-        <div>
-            <h3>Progress</h3>
-            <div id="player-graph">
 
+<body>
+    <header id="header" class="header">
+        <a href="/" class="title">
+            <h1>Carleton Squash Club Rankings</h1>
+        </a>
+    </header>
+
+    <section id="content" class="content">
+        <div id="player-stat">
+        </div>
+        <div class="graph-div">
+            <h3 class="graph-title">Progress</h3>
+            <div id="player-graph" class="player-graph">
             </div>
         </div>
         <div id="player-matches">
-            <h3>Matches</h3>
+            <h3 class="matches-title">Matches</h3>
             <div>
-                <table>
+                <table class="matches">
                     <thead>
                         <tr>
-                            <td>Player A</td>
-                            <td>Player A Ranking</td>
-                            <td>Player B </td>
-                            <td>Player B Ranking</td>
-                            <td>Player Won</td>
-                            <td>When</td>
+                            <th>Player A</th>
+                            <th>Player A Elo</th>
+                            <th>Player B </th>
+                            <th>Player B Elo</th>
+                            <th>Winner</th>
+                            <th>When</th>
                         </tr>
                     </thead>
                     <tbody id="player-matches-body">
-
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
 
-    <footer id="footer">
+    <footer id="footer" class="footer">
         <p>Made By <a href="http://aaravsibbal.com" target="_blank" rel="noopener noreferrer">Aarav Sibbal</a></p>
     </footer>
     <script type="module" src="../static/js/match.js"></script>
     <script type="module" src="../static/js/player.js"></script>
 </body>
+
 </html>
