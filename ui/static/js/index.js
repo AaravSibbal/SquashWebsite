@@ -102,7 +102,6 @@ async function getRanking(){
 
         return response.json()
     }).then(jsonObj=>{
-        console.log(jsonObj)
         createPlayerArrFromJson(jsonObj)
     }).catch(error => {
         console.error("there was a problem with the fetch operating\n\n"+error)
@@ -131,3 +130,29 @@ function createPlayerArrFromJson(obj){
 document.addEventListener('DOMContentLoaded', ()=>{
     getRanking()
 })
+
+const searchInput = document.getElementById('player-search')
+
+// Event listener for the search input
+searchInput.addEventListener("input", function (e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const filteredPlayers = players.filter(player =>
+    player.name.toLowerCase().includes(searchTerm)
+  );
+  
+  displayResults(filteredPlayers);
+});
+
+// Function to display the filtered results
+/**
+ * 
+ * @param {Player[]} players 
+ */
+function displayResults(players) {
+  rankingTableBody.innerHTML = ""; // Clear previous results
+
+  players.forEach(player => {
+    let row = player.toHTMLTableRow()
+    rankingTableBody.appendChild(row);
+  });
+}

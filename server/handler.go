@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"strconv"
 
@@ -24,11 +25,11 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	w.Write(htmlFile)
 }
 
-func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
+func (app *application) playerRankings(w http.ResponseWriter, r *http.Request) {
 	players, err := psql.GetRanking(app.db, app.ctx)
 	if err != nil {
 		app.serverError(w, err)
-		return 
+		return
 	}
 
 	playersJson, err := json.Marshal(players)
@@ -37,16 +38,16 @@ func (app *application) playerRankings(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")	
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(playersJson)
 }
 
-func (app *application) playerStat(w http.ResponseWriter, r *http.Request){
+func (app *application) playerStat(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get(":name")
 	if name == "" {
 		app.clientError(w, http.StatusBadRequest)
 		return
-	}	
+	}
 
 	player, err := psql.GetPlayerData(app.db, app.ctx, name)
 	if err != nil {
@@ -64,9 +65,9 @@ func (app *application) playerStat(w http.ResponseWriter, r *http.Request){
 	w.Write(playerJson)
 }
 
-func (app *application) playerGraph(w http.ResponseWriter, r *http.Request){
+func (app *application) playerGraph(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get(":name")
-	if name == ""{
+	if name == "" {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
@@ -78,19 +79,39 @@ func (app *application) playerGraph(w http.ResponseWriter, r *http.Request){
 	}
 
 	if len(matches) == 0 {
-		 html := "<p>No Match Data Found</p>"
-		 w.Header().Set("Content-Type", "text/html")
-		 w.Write([]byte(html))
-		 return
+		html := "<p>No Match Data Found</p>"
+		w.Header().Set("Content-Type", "text/html")
+		w.Write([]byte(html))
+		return
+	}
+
+	tmpl := "{{.Element}} {{.Script}} {{.Option}}"
+	t := template.New("snippet")
+	t, err = t.Parse(tmpl)
+	if err != nil {
+		panic(err)
 	}
 
 	line := chart.GetEloChart(matches, name)
+	lineSnippet := line.RenderSnippet()
 
-	w.Header().Set("Content-Type", "text/html")
-	w.Write(line.RenderContent())
+	data := struct {
+		Element template.HTML
+		Script  template.HTML
+		Option  template.HTML
+	}{
+		Element: template.HTML(lineSnippet.Element),
+		Script:  template.HTML(lineSnippet.Script),
+		Option:  template.HTML(lineSnippet.Option),
+	}
+
+	err = t.Execute(w, data)
+	if err != nil {
+		panic(err)
+	}
 }
 
-func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
+func (app *application) playerMatches(w http.ResponseWriter, r *http.Request) {
 	var pageInt int
 	name := r.URL.Query().Get(":name")
 	if name == "" {
@@ -105,7 +126,7 @@ func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
 		page, err := strconv.Atoi(pageStr)
 		if err != nil {
 			pageInt = 0
-		} else{
+		} else {
 			pageInt = page
 		}
 	}
@@ -126,7 +147,7 @@ func (app *application) playerMatches(w http.ResponseWriter, r *http.Request){
 	w.Write(matchesJson)
 }
 
-func (app *application) playerHtml(w http.ResponseWriter, r *http.Request){
+func (app *application) playerHtml(w http.ResponseWriter, r *http.Request) {
 	html, err := app.readHTMLFile("player.html")
 	if err != nil {
 		app.serverError(w, err)

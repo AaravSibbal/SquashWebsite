@@ -10,7 +10,7 @@ let record = 0
 
 document.addEventListener('DOMContentLoaded', ()=>{
     getPlayer()
-    getGraph()
+    // getGraph()
     getMatches()
 })
 
@@ -42,6 +42,7 @@ async function getGraph(){
         return response.text()
     }).then(htmlContent=>{
         playerGraph.innerHTML = htmlContent
+        console.log(htmlContent)
     }).catch(error=>{
         console.error(error)
     })
@@ -58,13 +59,13 @@ async function getMatches(){
         if(!response.ok){
             throw new Error("response was not okay")
         }
-
         return response.json()
     }).then((jsonObj)=>{
         record++
         console.log(jsonObj)
+        jsonToHTMLMatches(jsonObj)
     }).catch(error=>{
-        console.error("there was a problem with the request")
+        console.error("there was a problem with the request", error)
         record--
     })
 
@@ -108,7 +109,7 @@ function playerJsonToHTML(jsonObj){
     const nameElem = document.createElement('p')
     const statLineElem = document.createElement('p')
     nameElem.className = "player-name"
-    statLineElem.className = "player-statline"
+    statLineElem.className = "player-statline"  
 
     const name = jsonObj.name
     const wins = jsonObj.wins

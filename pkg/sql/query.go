@@ -3,6 +3,7 @@ package psql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/AaravSibbal/SquashWebsite/pkg/elo"
@@ -34,7 +35,7 @@ func GetRanking(db *sql.DB, ctx *context.Context) ([]*elo.Player, error) {
 	for rows.Next() {
 		player := &elo.Player{}
 
-		err := rows.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &totalCount)
+		err := rows.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &player.Discord_ID, &totalCount)
 		
 		player.Ranking = count
 		if err != nil {
@@ -73,7 +74,7 @@ func GetPlayerData(db *sql.DB, ctx *context.Context, name string) (*elo.Player, 
 	player := &elo.Player{}
 
 	err = row.Scan(&player.Player_ID, &player.Name, &player.EloRating,
-		&player.Wins, &player.Losses, &player.Draws, &player.TotalMatches)
+		&player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &player.Discord_ID)
 	if err != nil {
 		return nil, err
 	}
@@ -113,13 +114,15 @@ func GetPlayerMatches(db *sql.DB, ctx *context.Context, name string, offset int)
 			return nil, err
 		}
 
+		year, month, day := when.Date()
+
 		match := &elo.MatchJson{
 			PlayerA: playerAName,
 			PlayerB: playerBName,
 			PlayerWon: GetPlayerWon(playerAID, playerWonID, playerAName, playerBName),
 			PlayerARating: playerARating,
 			PlayerBRating: playerBRating,
-			When: when.Format("30 Jan 2024"),
+			When: fmt.Sprintf("%d %s, %d", day, month.String(), year),
 		}
 
 		matches = append(matches, match)

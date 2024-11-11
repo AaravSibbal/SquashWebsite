@@ -11,8 +11,8 @@ import (
 
 func genarateXAxisArr() []int {
 	arr := make([]int, 0, 20)
-	
-	for i:=1; i<21; i++{
+
+	for i := 1; i < 21; i++ {
 		arr = append(arr, i)
 	}
 
@@ -23,18 +23,19 @@ func eloToLineData(matches []*elo.MatchJson, playerName string) []opts.LineData 
 	items := make([]opts.LineData, 0, len(matches))
 
 	for _, match := range matches {
-		items = append(items, opts.LineData{Value: getElo(match, getElo(match, playerName))})
+		items = append(items, opts.LineData{Value: getElo(match, playerName)})
 	}
+	fmt.Printf("Items: %+v", items)
 
 	return items
 }
 
-func getElo(match *elo.MatchJson, playerName string) string {
+func getElo(match *elo.MatchJson, playerName string) int {
 	if match.PlayerA == playerName {
-		return string(match.PlayerARating)
+		return match.PlayerARating
 	}
 
-	return string(match.PlayerBRating)
+	return match.PlayerBRating
 }
 
 func GetEloChart(matches []*elo.MatchJson, playerName string) *charts.Line {
