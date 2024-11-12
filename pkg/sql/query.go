@@ -109,7 +109,7 @@ func GetPlayerMatches(db *sql.DB, ctx *context.Context, name string, offset int)
 		when := time.Time{}
 	
 		err := rows.Scan(&id, &playerAID, &playerBID, &playerWonID, &when,
-				&playerARating, &playerBRating, &playerAName, &playerBName)
+				&playerARating, &playerBRating, &playerBName, &playerAName)
 		if err != nil {
 			return nil, err
 		}

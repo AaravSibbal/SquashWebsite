@@ -61,12 +61,16 @@ class Match {
         
         let playerA = document.createElement("td")
         let playerALink = document.createElement('a')
-        playerALink.href = `/player/${playerA}`
+        playerALink.href = `/player/${this.playerA}`
         playerALink.innerText = this.getPlayerA()
         playerA.appendChild(playerALink)
         
         let playerB = document.createElement("td")
-        playerB.textContent = this.getPlayerB()
+        let playerBLink = document.createElement('a')
+        playerBLink.href = `/player/${this.playerB}` 
+        playerBLink.innerText = this.playerB
+        playerB.appendChild(playerBLink)
+
 
         let playerARating = document.createElement("td")
         playerARating.textContent = this.getPlayerARating()

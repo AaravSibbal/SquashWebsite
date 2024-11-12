@@ -72,6 +72,9 @@ a{
     text-decoration: underline;
 }
 
+.title{
+    text-decoration: none;
+}
 .footer{
     text-align: center;
     
