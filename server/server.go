@@ -58,6 +58,7 @@ func Run() {
 	err = srv.ListenAndServe()
 
 	log.Fatal(err)
+	
 }
 
 func getDBConnection(envFile map[string]string) (*sql.DB, error){
