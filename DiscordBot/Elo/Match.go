@@ -3,10 +3,11 @@ package elo
 import (
 	"time"
 
+	"github.com/google/uuid"
 )
 
 type Match struct {
-	Id string
+	Id *uuid.UUID
 	PlayerA    *Player
 	PlayerB    *Player
 	PlayerWon  *Player

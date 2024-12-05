@@ -3,8 +3,8 @@ package bot
 import (
 	"fmt"
 
-	elo "github.com/AaravSibbal/SquashWebsite/Bot/Elo"
-	"github.com/AaravSibbal/SquashWebsite/Bot/psql"
+	elo "github.com/AaravSibbal/SqashEloRatingSystem/Elo"
+	"github.com/AaravSibbal/SqashEloRatingSystem/psql"
 	"github.com/bwmarrin/discordgo"
 )
 

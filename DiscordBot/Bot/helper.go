@@ -3,11 +3,10 @@ package bot
 import (
 	"errors"
 	"fmt"
-
 	// "fmt"
 	"strings"
 
-	elo "github.com/AaravSibbal/SquashWebsite/Bot/Elo"
+	elo "github.com/AaravSibbal/SqashEloRatingSystem/Elo"
 	"github.com/bwmarrin/discordgo"
 )
 

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	elo "github.com/AaravSibbal/SquashWebsite/Bot/Elo"
+	elo "github.com/AaravSibbal/SqashEloRatingSystem/Elo"
 )
 
 func InsertPlayer(db *sql.DB, ctx *context.Context, player *elo.Player) error {

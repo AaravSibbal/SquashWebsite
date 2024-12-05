@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"strings"
-	"sync"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -17,7 +16,6 @@ type Bot struct {
 	BotToken string
 	Db       *sql.DB
 	Ctx      *context.Context
-	Wg       *sync.WaitGroup
 }
 
 func (b *Bot) Run() {
@@ -35,11 +33,10 @@ func (b *Bot) Run() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
-	b.Wg.Done()
 }
 
 func standardizeSpaces(s string) string {
-	return strings.Join(strings.Fields(s), " ")
+    return strings.Join(strings.Fields(s), " ")
 }
 
 // TODO: add beginner, intermidiate, advance option to the addPlayer
@@ -48,6 +45,7 @@ func (b *Bot) newMessage(discord *discordgo.Session, message *discordgo.MessageC
 
 	message.Content = strings.ToLower(message.Content)
 	message.Content = standardizeSpaces(message.Content)
+
 
 	fmt.Printf("Message Content: %s\n", message.Content)
 	switch {
