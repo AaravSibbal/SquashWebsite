@@ -1,6 +1,6 @@
 module github.com/AaravSibbal/SqashEloRatingSystem
 
-go 1.23.2
+go 1.19.8
 
 require github.com/joho/godotenv v1.5.1
 
