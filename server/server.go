@@ -68,6 +68,17 @@ func getDBConnection(envFile map[string]string) (*sql.DB, error){
 	password := envFile["POSTGRES_PASSWORD"]
 	dbName := envFile["POSTGRES_NAME"]
 
+
+	isDev := os.Args[1]
+
+	if isDev == "-dev" {
+		host = envFile["POSTGRES_DEV_HOST"]
+		postPort = envFile["POSTGRES_DEV_PORT"]
+		user = envFile["POSTGRES_DEV_USER"]
+		password = envFile["POSTGRES_DEV_PASSWORD"]
+		dbName = envFile["POSTGRES_DEV_NAME"]
+	}
+
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, postPort, user, password, dbName)
 

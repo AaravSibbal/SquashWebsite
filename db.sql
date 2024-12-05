@@ -16,16 +16,20 @@ CREATE TABLE IF NOT EXISTS match(
     match_time timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT fk_player_a_ID
         FOREIGN KEY(player_a_ID)
-            REFERENCES player(player_ID),
+            REFERENCES player(player_ID)
+            ON DELETE CASCADE,
     CONSTRAINT fk_player_b_ID
         FOREIGN KEY(player_b_ID)
-            REFERENCES player(player_ID),
+            REFERENCES player(player_ID)
+            ON DELETE CASCADE,
     CONSTRAINT fk_player_won_ID
         FOREIGN KEY(player_won_ID)
             REFERENCES player(player_ID)
+            ON DELETE CASCADE
 );
 
 ALTER TABLE match ADD player_a_rating INT NOT NULL;
 ALTER TABLE match ADD player_b_rating INT NOT NULL;
 ALTER TABLE match ADD player_b_name VARCHAR(255) NOT NULL;
 ALTER TABLE match ADD player_a_name VARCHAR(255) NOT NULL;
+ALTER TABLE player ADD discord_id VARCHAR(20) NOT NULL;

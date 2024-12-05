@@ -136,3 +136,27 @@ func (b *Bot) getPlayerStat(user *discordgo.User) string {
 
 	return player.String()
 }
+
+func (b *Bot) removePlayers(users []*discordgo.User) string {
+	if len(users) < 1 {
+		return "need at least 1 user to remove"
+	}
+
+	returnMsg := ""
+
+	for _, user := range users {
+		returnMsg += "\n" + b.removePlayer(user)
+	}
+
+	return returnMsg
+}
+
+func (b *Bot) removePlayer(user *discordgo.User) string {
+	err := psql.RemovePlayer(b.Db, b.Ctx, user)
+
+	if err != nil {
+		return err.Error()
+	}
+
+	return "Removed player "+ user.Username + " successfully"
+}

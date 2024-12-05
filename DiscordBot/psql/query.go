@@ -8,6 +8,7 @@ import (
 	"time"
 
 	elo "github.com/AaravSibbal/SqashEloRatingSystem/Elo"
+	"github.com/bwmarrin/discordgo"
 )
 
 func InsertPlayer(db *sql.DB, ctx *context.Context, player *elo.Player) error {
@@ -15,10 +16,15 @@ func InsertPlayer(db *sql.DB, ctx *context.Context, player *elo.Player) error {
 	(name, elo_rating, wins, losses, draws, total_matches, discord_ID) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
+	stmt, err := db.Prepare(sqlStmt)
+	if err != nil {
+		return errors.New("there is a problem with inserting the player inform the devloper")
+	}
+	
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := db.ExecContext(newCtx, sqlStmt, player.Name, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID)
+	result, err := stmt.ExecContext(newCtx, player.Name, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID)
 	if err == context.DeadlineExceeded {
 		fmt.Printf("The query took too long for InsertPlayer, %v\n", err)
 		return err
@@ -45,12 +51,17 @@ func InsertMatch(tx *sql.Tx, ctx *context.Context, match *elo.Match) error {
 	player_a_name, player_b_name)
 	 VALUES ($1, $2, $3, $4, $5, $6, $7)`
 	
+	stmt, err := tx.Prepare(insertMatchStmt)
+	if err != nil{
+		return errors.New("there is a problem with inserting the match inform the devloper")
+	}
+	
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 	
 
-	results, err := tx.ExecContext(newCtx, insertMatchStmt, 
-		match.PlayerA.Player_ID, match.PlayerB.Player_ID, 
+	results, err := stmt.ExecContext(newCtx,match.PlayerA.Player_ID, 
+		match.PlayerB.Player_ID, 
 		match.PlayerWon.Player_ID, match.PlayerARating, match.PlayerBRating,
 		match.PlayerAName, match.PlayerBName)
 	
@@ -77,14 +88,19 @@ we get a valid result return an error otherwise
 func GetPlayer(db *sql.DB, ctx *context.Context, discordID string) (*elo.Player, error) {
 	sqlStmt := `Select * FROM player WHERE discord_ID=$1`
 
+	stmt, err := db.Prepare(sqlStmt)
+	if err != nil {
+		return nil, errors.New("there is a problem with getting the player inform the devloper")
+	}
+	
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
-	row := db.QueryRowContext(newCtx, sqlStmt, discordID)
+	row := stmt.QueryRowContext(newCtx, discordID)
 
 	player := &elo.Player{}
 
-	err := row.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &player.Discord_ID)
+	err = row.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &player.Discord_ID)
 	
 	if err != nil {
 		return nil, err	
@@ -94,14 +110,20 @@ func GetPlayer(db *sql.DB, ctx *context.Context, discordID string) (*elo.Player,
 }
 
 func UpdatePlayerWithTx(tx *sql.Tx, ctx *context.Context, player *elo.Player) error {
+	
 	sqlStmt :=	`UPDATE player 
 	SET elo_rating=$1, wins=$2, losses=$3, draws=$4, total_matches=$5
 	WHERE discord_ID=$6`
+	
+	stmt, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		return errors.New("there is a problem with updating the player inform the devloper")
+	}	
 
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := tx.ExecContext(newCtx, sqlStmt, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID) 
+	result, err := stmt.ExecContext(newCtx, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID) 
 	if err != nil {
 		return err
 	}
@@ -113,6 +135,38 @@ func UpdatePlayerWithTx(tx *sql.Tx, ctx *context.Context, player *elo.Player) er
 
 	if rowsAffected != 1 {
 		return errors.New("more rows were affected than expected")
+	}
+
+	return nil
+}
+
+func RemovePlayer(db *sql.DB, ctx *context.Context, user *discordgo.User) error {
+	stmt, err := db.Prepare("DELETE from player WHERE discord_id=$1")
+	if err != nil {
+		fmt.Printf("error: %s", err.Error())
+		return errors.New("there is a problem with removing the player inform the devloper")
+	}
+
+	newCtx, cancel := context.WithTimeout(*ctx, time.Second*5)
+	defer cancel()
+
+	result, err := stmt.ExecContext(newCtx, user.ID)
+
+	if err == sql.ErrNoRows {
+		return fmt.Errorf("no player with ID %s", user.Username)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("there was a problem with removing player: %s", user.Username)
+	}
+
+	if rowsAffected < 1 {
+		return fmt.Errorf("there was no player with username: %s", user.Username)
+	}
+
+	if rowsAffected > 1 {
+		return errors.New("the dev messed up very badly with removing players inform him")
 	}
 
 	return nil

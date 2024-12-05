@@ -61,6 +61,8 @@ func (b *Bot) newMessage(discord *discordgo.Session, message *discordgo.MessageC
 		discord.ChannelMessageSend(message.ChannelID, b.addMatch(message.Mentions, message.Content))
 	case strings.HasPrefix(message.Content, "!stat"):
 		discord.ChannelMessageSend(message.ChannelID, b.stat(message.Mentions))
+	case strings.HasPrefix(message.Content, "!removeplayer"):
+		discord.ChannelMessageSend(message.ChannelID, b.removePlayers(message.Mentions))
 		// default:
 		// 	discord.ChannelMessageSend(message.ChannelID, "something went wrong")
 	}
