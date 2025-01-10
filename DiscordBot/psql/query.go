@@ -20,7 +20,7 @@ func InsertPlayer(db *sql.DB, ctx *context.Context, player *elo.Player) error {
 	if err != nil {
 		return errors.New("there is a problem with inserting the player inform the devloper")
 	}
-	
+
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
@@ -33,39 +33,37 @@ func InsertPlayer(db *sql.DB, ctx *context.Context, player *elo.Player) error {
 	}
 
 	rows, err := result.RowsAffected()
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	if rows != 1 {
 		return fmt.Errorf("expected row affected to be 1 got %d", rows)
 	}
 
-
 	return nil
 }
 
 func InsertMatch(tx *sql.Tx, ctx *context.Context, match *elo.Match) error {
-	
+
 	insertMatchStmt := `INSERT INTO MATCH 
 	(player_a_ID, player_b_ID, player_won_ID, player_a_rating, player_b_rating,
 	player_a_name, player_b_name)
 	 VALUES ($1, $2, $3, $4, $5, $6, $7)`
-	
+
 	stmt, err := tx.Prepare(insertMatchStmt)
-	if err != nil{
+	if err != nil {
 		return errors.New("there is a problem with inserting the match inform the devloper")
 	}
-	
+
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
-	
 
-	results, err := stmt.ExecContext(newCtx,match.PlayerA.Player_ID, 
-		match.PlayerB.Player_ID, 
+	results, err := stmt.ExecContext(newCtx, match.PlayerA.Player_ID,
+		match.PlayerB.Player_ID,
 		match.PlayerWon.Player_ID, match.PlayerARating, match.PlayerBRating,
 		match.PlayerAName, match.PlayerBName)
-	
-		if err == context.DeadlineExceeded {
+
+	if err == context.DeadlineExceeded {
 		return err
 	} else if err != nil {
 		return err
@@ -82,7 +80,7 @@ func InsertMatch(tx *sql.Tx, ctx *context.Context, match *elo.Match) error {
 }
 
 /*
-uses the discord id of user to fetch the user return the Player obj if 
+uses the discord id of user to fetch the user return the Player obj if
 we get a valid result return an error otherwise
 */
 func GetPlayer(db *sql.DB, ctx *context.Context, discordID string) (*elo.Player, error) {
@@ -92,7 +90,7 @@ func GetPlayer(db *sql.DB, ctx *context.Context, discordID string) (*elo.Player,
 	if err != nil {
 		return nil, errors.New("there is a problem with getting the player inform the devloper")
 	}
-	
+
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
@@ -101,29 +99,29 @@ func GetPlayer(db *sql.DB, ctx *context.Context, discordID string) (*elo.Player,
 	player := &elo.Player{}
 
 	err = row.Scan(&player.Player_ID, &player.Name, &player.EloRating, &player.Wins, &player.Losses, &player.Draws, &player.TotalMatches, &player.Discord_ID)
-	
+
 	if err != nil {
-		return nil, err	
+		return nil, err
 	}
 
 	return player, nil
 }
 
 func UpdatePlayerWithTx(tx *sql.Tx, ctx *context.Context, player *elo.Player) error {
-	
-	sqlStmt :=	`UPDATE player 
+
+	sqlStmt := `UPDATE player 
 	SET elo_rating=$1, wins=$2, losses=$3, draws=$4, total_matches=$5
 	WHERE discord_ID=$6`
-	
+
 	stmt, err := tx.Prepare(sqlStmt)
 	if err != nil {
 		return errors.New("there is a problem with updating the player inform the devloper")
-	}	
+	}
 
 	newCtx, cancel := context.WithTimeout(*ctx, 5*time.Second)
 	defer cancel()
 
-	result, err := stmt.ExecContext(newCtx, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID) 
+	result, err := stmt.ExecContext(newCtx, player.EloRating, player.Wins, player.Losses, player.Draws, player.TotalMatches, player.Discord_ID)
 	if err != nil {
 		return err
 	}
